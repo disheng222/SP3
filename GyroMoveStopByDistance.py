@@ -1,6 +1,6 @@
 from hub import port, motion_sensor
 import runloop, motor, motor_pair
-import time, color_sensor
+import time, distance_sensor
 
 MIDDLE_WHEEL_MAX=1110 #The max speed value of MIDDLE WHEEL
 
@@ -10,21 +10,29 @@ def get_yaw_angle():
 
 #gyrostraight
 #motorPair: the motor pair defined beforehand
-#colorPort: the port connected by the color sensor
+#disPort: the port connected by the distance sensor
 #direction: the direction the robot will move toward
 #speed: the speed value (-100,100)
-def gyroMoveStopbyBlackLine(motorPair, colorPort, direction, speed):   
+#distance: when the distance is smaller than this number (masured in millimeters), the robot will stop
+def gyroMoveStopbyDistance(motorPair, disPort, direction, speed, target_distance):
+    distance = target_distance
     v = (int)(speed*MIDDLE_WHEEL_MAX/100)
     if(speed > 0):
         while True:
-            if(color_sensor.reflection(colorPort) < 50):
+            current_distance = distance_sensor.distance(disPort)
+            if(current_distance==-1):
+                continue
+            if(current_distance < distance):
                 motor_pair.stop(motorPair)
                 break
             motor_pair.move(motorPair, 2*(direction-get_yaw_angle()), velocity=v)
     else:
         while True:
-            if(color_sensor.reflection(colorPort) < 50):
-                motor_pair.stop(motorPair)
+            current_distance = distance_sensor.distance(disPort)
+            if(current_distance==-1):
+                continue          
+            if(current_distance < distance):
+                motor_pair.stop(motorPair, )
                 break
             motor_pair.move(motorPair, -2*(direction-get_yaw_angle()), velocity=v)
 
@@ -35,7 +43,7 @@ async def main():
     motion_sensor.reset_yaw(0)
 
     #move along the direction -44 degrees with the speed 30% and stop at the black line
-    gyroMoveStopbyBlackLine(motor_pair.PAIR_1, port.F, -44, 30)
+    gyroMoveStopbyDistance(motor_pair.PAIR_1, port.E, 0, -30, 60)
 
 runloop.run(main())
 
