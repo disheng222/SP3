@@ -8,6 +8,7 @@ async def main():
     await light_matrix.write("Hi!")
     motion_sensor.set_yaw_face(motion_sensor.FRONT)
     motion_sensor.reset_yaw(0)
+    await runloop.until(motion_sensor.stable)
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
 
     #turn left 90 degrees

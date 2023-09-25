@@ -36,6 +36,7 @@ async def main():
     # write your code here
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.reset_yaw(0)
+    await runloop.until(motion_sensor.stable)
     gyroMoveStopbySeconds(motor_pair.PAIR_1, 0, 30, 2)
     gyroMoveStopbySeconds(motor_pair.PAIR_1, -45, 30, 2)
     gyroMoveStopbySeconds(motor_pair.PAIR_1, -90, 30, 2)

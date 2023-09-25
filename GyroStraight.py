@@ -12,6 +12,7 @@ def gyrostraight(motorPair, speed, seconds):
     milliseconds = seconds*1000
     v = (int)(speed*MIDDLE_WHEEL_MAX/100)
     motion_sensor.reset_yaw(0)
+    await runloop.until(motion_sensor.stable)
     start = time.ticks_ms()
     while True:
         if(time.ticks_diff(time.ticks_ms(), start) > milliseconds):
@@ -24,7 +25,7 @@ def gyrostraight(motorPair, speed, seconds):
 async def main():
     # write your code here
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
-    gyrostraight(motor_pair.PAIR_1, 30, 3)
+gyrostraight(motor_pair.PAIR_1, 30, 3)
 
 runloop.run(main())
 

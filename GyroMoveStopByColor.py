@@ -33,6 +33,7 @@ async def main():
     # write your code here
     motor_pair.pair(motor_pair.PAIR_1, port.A, port.B)
     motion_sensor.reset_yaw(0)
+    await runloop.until(motion_sensor.stable)
 
     #move along the direction -44 degrees with the speed 30% and stop at the black line
     gyroMoveStopbyBlackLine(motor_pair.PAIR_1, port.F, -44, 30)
