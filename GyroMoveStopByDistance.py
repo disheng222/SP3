@@ -8,7 +8,7 @@ MIDDLE_WHEEL_MAX=1110 #The max speed value of MIDDLE WHEEL
 def get_yaw_angle():
     return (int)(-motion_sensor.tilt_angles()[0]*0.1)
 
-#gyrostraight
+#gyrostraight moving and stop by distance
 #motorPair: the motor pair defined beforehand
 #disPort: the port connected by the distance sensor
 #direction: the direction the robot will move toward
@@ -20,18 +20,14 @@ def gyroMoveStopbyDistance(motorPair, disPort, direction, speed, target_distance
     if(speed > 0):
         while True:
             current_distance = distance_sensor.distance(disPort)
-            if(current_distance==-1):
-                continue
-            if(current_distance < distance):
+            if(current_distance!=-1 and current_distance < distance):
                 motor_pair.stop(motorPair)
                 break
             motor_pair.move(motorPair, 2*(direction-get_yaw_angle()), velocity=v)
     else:
         while True:
-            current_distance = distance_sensor.distance(disPort)
-            if(current_distance==-1):
-                continue          
-            if(current_distance < distance):
+            current_distance = distance_sensor.distance(disPort)   
+            if(current_distance!=-1 and current_distance < distance):
                 motor_pair.stop(motorPair, )
                 break
             motor_pair.move(motorPair, -2*(direction-get_yaw_angle()), velocity=v)
